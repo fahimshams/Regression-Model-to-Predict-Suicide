@@ -14,7 +14,12 @@ df = pd.DataFrame(data)
 
 df_subset = df[['UNIT', 'STUB_NAME', 'STUB_LABEL', 'YEAR', 'ESTIMATE']]
 
-df_filtered = df_subset[df_subset['STUB_LABEL'].isin(['Male: Not Hispanic or Latino: White', 'Male: Not Hispanic or Latino: Black or African American', 'Male: Hispanic or Latino: All races', 'Male: Hispanic or Latino: All races','Male: Not Hispanic or Latino: Asian or Pacific Islander' ])]
+df_filtered = df_subset[(df_subset['UNIT'] == 'Deaths per 100,000 resident population, crude') & 
+                        (df_subset['STUB_NAME'] == 'Sex and race and Hispanic origin') &
+                        (df_subset['STUB_LABEL'].isin(['Male: Not Hispanic or Latino: White', 
+                                                       'Male: Not Hispanic or Latino: Black or African American', 
+                                                       'Male: Hispanic or Latino: All races',
+                                                       'Male: Not Hispanic or Latino: Asian or Pacific Islander']))]
 
 column_names = {
     'UNIT': 'Measurement_Unit',

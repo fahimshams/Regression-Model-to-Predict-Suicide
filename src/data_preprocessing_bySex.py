@@ -14,7 +14,8 @@ df = pd.DataFrame(data)
 
 df_subset = df[['UNIT', 'STUB_LABEL', 'YEAR', 'ESTIMATE']]
 
-df_filtered = df_subset[df_subset['STUB_LABEL'].isin(['Male', 'Female'])]
+df_filtered = df_subset[(df_subset['UNIT'] == 'Deaths per 100,000 resident population, age-adjusted') & 
+                        (df_subset['STUB_LABEL'].isin(['All persons','Male', 'Female']))]
 
 column_names = {
     'UNIT': 'Measurement_Unit',
