@@ -14,7 +14,7 @@ df = pd.DataFrame(data)
 
 df_subset = df[['UNIT', 'STUB_NAME', 'STUB_LABEL', 'YEAR', 'ESTIMATE']]
 
-df_filtered = df_subset[df_subset['STUB_NAME'].isin(['Sex and race', 'Sex and race and Hispanic origin', 'Sex, age and race', 'Sex, age and race and Hispanic origin'])]
+df_filtered = df_subset[df_subset['STUB_LABEL'].isin(['Male: Not Hispanic or Latino: White', 'Male: Not Hispanic or Latino: Black or African American', 'Male: Hispanic or Latino: All races', 'Male: Hispanic or Latino: All races','Male: Not Hispanic or Latino: Asian or Pacific Islander' ])]
 
 column_names = {
     'UNIT': 'Measurement_Unit',
@@ -40,7 +40,7 @@ for column in null_values[null_values > 0].index:
 
 print("Null values filled conditionally.")
 
-output_path = '../data/Processed_Rates_By_Race.xlsx'
+output_path = '../data/Processed_Rates_By_Race_Male.xlsx'
 sheet_name = 'Race'
 df_filtered.to_excel(output_path, sheet_name=sheet_name, index=False)
 print(f"DataFrame saved to '{output_path}' in sheet '{sheet_name}'.")
