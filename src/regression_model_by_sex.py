@@ -36,3 +36,14 @@ plt.ylabel('Deaths_per_100k_Resident_Population')
 plt.title('Linear Regression Model - Male vs Female')
 plt.legend()
 plt.show()
+
+# Calculations
+print("Results for Male Linear Regression Model:")
+print("Coefficients:", model_male.coef_)
+print("Mean Squared Error:", mean_squared_error(male_data['Deaths_per_100k_Resident_Population'], y_pred_male))
+print("R-squared Score:", r2_score(male_data['Deaths_per_100k_Resident_Population'], y_pred_male))
+
+print("\nResults for Female Linear Regression Model:")
+print("Coefficients:", model_female.coef_)
+print("Mean Squared Error:", mean_squared_error(female_data['Deaths_per_100k_Resident_Population'], y_pred_female))
+print("R-squared Score:", r2_score(female_data['Deaths_per_100k_Resident_Population'], y_pred_female))
