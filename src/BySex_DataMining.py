@@ -7,7 +7,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
 
 # Load the dataset from Excel sheet
-data = pd.read_excel('../data/Processed_Rates_By_Sex.xlsx')
+data = pd.read_excel('../data/Processed_Rates_By_Sex.xlsx', engine='openpyxl')
 
 # Convert 'Year' column to datetime format
 data['Year'] = pd.to_datetime(data['Year'], format='%Y')
