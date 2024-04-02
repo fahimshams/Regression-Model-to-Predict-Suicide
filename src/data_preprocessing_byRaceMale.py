@@ -1,64 +1,46 @@
+#Load data
+#Combine data
+#Clean Data
+#Handle missing values
+
 import pandas as pd
-import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error, r2_score
+pd.options.mode.chained_assignment = None
 
-# Load the dataset from Excel sheet
-data = pd.read_excel('../data/Processed_Rates_By_Race_Male.xlsx', engine='openpyxl')
+path_to_file = '../data/Suicide_Rates_In_US.xlsx'
 
-# Selecting features and target variable
-X = data[['Year']].values  # Feature: Year
-y = data['Deaths_per_100k_Resident_Population'].values  # Target: Deaths_per_100k_Resident_Population
+data = pd.read_excel(path_to_file, sheet_name='Male sex, race and Hispanic ori', engine='openpyxl')
 
-# Splitting the data based on different ethnicities
-white_data = data[data['Race/Male'] == 'Male: Not Hispanic or Latino: White']
-black_data = data[data['Race/Male'] == 'Male: Not Hispanic or Latino: Black or African American']
-hispanic_data = data[data['Race/Male'] == 'Male: Hispanic or Latino: All races']
-asian_data = data[data['Race/Male'] == 'Male: Not Hispanic or Latino: Asian or Pacific Islander']
+df = pd.DataFrame(data)
 
-# Train-test split for each ethnicity
-X_white_train, X_white_test, y_white_train, y_white_test = train_test_split(
-    white_data[['Year']].values, white_data['Deaths_per_100k_Resident_Population'].values, test_size=0.2, random_state=42)
-X_black_train, X_black_test, y_black_train, y_black_test = train_test_split(
-    black_data[['Year']].values, black_data['Deaths_per_100k_Resident_Population'].values, test_size=0.2, random_state=42)
-X_hispanic_train, X_hispanic_test, y_hispanic_train, y_hispanic_test = train_test_split(
-    hispanic_data[['Year']].values, hispanic_data['Deaths_per_100k_Resident_Population'].values, test_size=0.2, random_state=42)
-X_asian_train, X_asian_test, y_asian_train, y_asian_test = train_test_split(
-    asian_data[['Year']].values, asian_data['Deaths_per_100k_Resident_Population'].values, test_size=0.2, random_state=42)
+df_subset = df[['UNIT', 'STUB_NAME', 'STUB_LABEL', 'YEAR', 'ESTIMATE']]
 
-# Choose a regression algorithm
-model = LinearRegression()
+df_filtered = df_subset[df_subset['STUB_LABEL'].isin(['Male: Not Hispanic or Latino: White', 'Male: Not Hispanic or Latino: Black or African American', 'Male: Hispanic or Latino: All races', 'Male: Hispanic or Latino: All races','Male: Not Hispanic or Latino: Asian or Pacific Islander' ])]
 
-# Train the model for each ethnicity
-model.fit(X_white_train, y_white_train)
-y_white_pred = model.predict(X_white_test)
+column_names = {
+    'UNIT': 'Measurement_Unit',
+    'STUB_LABEL': 'Race/Male',
+    'YEAR': 'Year',
+    'ESTIMATE': 'Deaths_per_100k_Resident_Population'
+}
 
-model.fit(X_black_train, y_black_train)
-y_black_pred = model.predict(X_black_test)
+df_filtered.rename(columns=column_names, inplace=True)
+print(df_filtered.columns)
 
-model.fit(X_hispanic_train, y_hispanic_train)
-y_hispanic_pred = model.predict(X_hispanic_test)
 
-model.fit(X_asian_train, y_asian_train)
-y_asian_pred = model.predict(X_asian_test)
+# Check for null values
+null_values = df_filtered.isnull().sum()
 
-# Plotting the results for each ethnicity
-plt.figure(figsize=(10, 6))
+# Display the columns with null values, if any
+print("Columns with null values:")
+print(null_values[null_values > 0])
 
-plt.scatter(X_white_test, y_white_test, color='blue', label='White')
-plt.scatter(X_black_test, y_black_test, color='red', label='Black')
-plt.scatter(X_hispanic_test, y_hispanic_test, color='green', label='Hispanic')
-plt.scatter(X_asian_test, y_asian_test, color='orange', label='Asian')
+for column in null_values[null_values > 0].index:
+    if null_values[column] > 0:
+        df_filtered[column].fillna(df_filtered[column].mean(), inplace=True)
 
-# Plotting the regression lines for each ethnicity
-plt.plot(X_white_test, y_white_pred, color='blue', linewidth=3)
-plt.plot(X_black_test, y_black_pred, color='red', linewidth=3)
-plt.plot(X_hispanic_test, y_hispanic_pred, color='green', linewidth=3)
-plt.plot(X_asian_test, y_asian_pred, color='orange', linewidth=3)
+print("Null values filled conditionally.")
 
-plt.xlabel('Year')
-plt.ylabel('Deaths_per_100k_Resident_Population')
-plt.title('Linear Regression Model by Ethnicity')
-plt.legend()
-plt.show()
+output_path = '../data/Processed_Rates_By_Race_Male.xlsx'
+sheet_name = 'Race'
+df_filtered.to_excel(output_path, sheet_name=sheet_name, index=False)
+print(f"DataFrame saved to '{output_path}' in sheet '{sheet_name}'.")
