@@ -14,7 +14,7 @@ df = pd.DataFrame(data)
 
 df_subset = df[['UNIT', 'STUB_NAME', 'STUB_LABEL', 'YEAR', 'ESTIMATE']]
 
-df_filtered = df_subset[df_subset['STUB_LABEL'].isin(['10-14 years', '15-24 years', '25-34 years', '35-44 years', '45-64 years', '65 years and over'])]
+df_filtered = df_subset[df_subset['STUB_LABEL'].isin(['Male: 10-14 years', 'Male: 15-24 years', 'Male: 25-34 years', 'Male: 35-44 years', 'Male: 45-64 years', 'Male: 65 years and over'])]
 
 
 column_names = {
